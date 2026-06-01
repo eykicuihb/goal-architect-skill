@@ -1,0 +1,1 @@
+/goal <desired end state>, verified by <specific evidence>, while preserving <constraints>. Use only <allowed inputs/tools/boundaries>. Between iterations, <how to choose and record the next action>. If blocked or no valid paths remain, stop with <attempted paths, evidence, blocker, and next input needed>.

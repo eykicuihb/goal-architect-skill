@@ -1,0 +1,7 @@
+interface:
+  display_name: "Goal Architect"
+  short_description: "Compile vague intent into verifiable Codex Goals."
+  brand_color: "#2563EB"
+  default_prompt: "Use $goal-architect to turn this request into a structured, evidence-backed /goal."
+policy:
+  allow_implicit_invocation: true
