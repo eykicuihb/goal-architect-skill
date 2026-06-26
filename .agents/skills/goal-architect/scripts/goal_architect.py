@@ -567,11 +567,20 @@ def cmd_compile(args: argparse.Namespace) -> int:
         return 2
     contract = compile_goal(raw)
     if args.format == "json":
-        print(json.dumps(contract.to_dict(), ensure_ascii=False, indent=2))
+        output_text = json.dumps(contract.to_dict(), ensure_ascii=False, indent=2)
     elif args.format == "codex":
-        print(contract_to_codex_goal(contract))
+        output_text = contract_to_codex_goal(contract)
     else:
-        print(contract_to_markdown(contract))
+        output_text = contract_to_markdown(contract)
+    print(output_text)
+
+    # Write to docs file when format is markdown (or explicitly requested)
+    if args.output and args.format == "markdown":
+        out_path = Path(args.output)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(output_text, encoding="utf-8")
+        print(f"\n[Goal Architect] Contract saved to: {out_path}", file=sys.stderr)
+
     return 0
 
 
@@ -604,6 +613,12 @@ def build_parser() -> argparse.ArgumentParser:
     compile_p = sub.add_parser("compile", help="Compile a request into a Goal Contract.")
     compile_p.add_argument("input", nargs="?", default="-", help="Input file path or '-' for stdin.")
     compile_p.add_argument("--format", choices=["markdown", "json", "codex"], default="markdown")
+    compile_p.add_argument(
+        "--output",
+        metavar="FILE",
+        default="docs/goal-contract.md",
+        help="Write markdown contract to this file (default: docs/goal-contract.md). Pass empty string to skip.",
+    )
     compile_p.set_defaults(func=cmd_compile)
 
     critique_p = sub.add_parser("critique", help="Score and critique an existing Goal.")
